@@ -48,7 +48,6 @@ function App() {
 
   useEffect(() =>{
     if(wrapId==null) return;
-    // console.log("retriving from db");
     
     const fetchData = async () =>{
       const res = await fetch(`http://localhost:3001/api/v1/csv/data/${wrapId}`);
