@@ -4,14 +4,14 @@ import pandas as pd
 def total_read(df: pd.DataFrame) -> int:
     
     counts = df['Exclusive Shelf'].value_counts()
-    return counts['read']
+    return int(counts['read'])
 
 
 # books in to-read: check 'Exclusive Shelf' for 'to-read'
 def total_toread(df: pd.DataFrame) -> int:
 
     counts = df['Exclusive Shelf'].value_counts()
-    return counts['to-read']
+    return int(counts['to-read'])
 
 # pages read: if 'Exclusive Shelf' is 'read', sum values in 'Number of Pages'
 def total_pages(df: pd.DataFrame) -> int:
@@ -23,12 +23,12 @@ def total_pages(df: pd.DataFrame) -> int:
     for index, row in filtered.iterrows():
         total += row['Number of Pages']
 
-    return total
+    return int(total)
 
 # unique authors read: check 'Author' and if 'Exclusive Shelf' is 'read'
 def total_authors(df: pd.DataFrame) -> int:
 
     filtered = df[df['Exclusive Shelf'] == 'read']
-    return filtered['Author'].nunique()
+    return int(filtered['Author'].nunique())
 
 
