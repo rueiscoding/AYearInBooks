@@ -1,69 +1,23 @@
-# React + TypeScript + Vite
+# A Year In Books (In Progress)
+ is a full-stack web app that generates personalized, shareable reading summaries from your Goodreads data. Think Spotify Wrapped, but for books. Upload your Goodreads CSV export, and the app will analyze your reading patterns and generate interactive data visualizations you can share.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Features (so far)
+Year-End Summary – Total books, pages, top authors, and most-read months
+Easy Uploads – Drag-and-drop CSV file upload
+Fast Analysis – Python microservice processes and returns results
+Temporary Data Storage – Redis (Upstash) stores processed results for ~30 days
 
-Currently, two official plugins are available:
+### Current Tech Stack
+Frontend: TypeScript, React, Tailwind CSS
+Backend: Node.js, Express, Redis
+Microservice: Python, FastAPI, Pandas, MongoDB (for caching enrichment data)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Status
+*Pipeline: CSV upload → Node.js/Express server → Python microservice (parsing & analysis) → results returned to server → database storage & frontend display.*
 
-## Expanding the ESLint configuration
+**Built:** The full pipeline is functional. Frontend is currently minimal as focus is on enriching analytics and visualizations.
+**In progress:** Data enrichment in Python microservice via creative API/data source combinations.
+**Planned:** Interactive charts and 3D models, metadata analysis, shareable visual summaries
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+#### *Note on Data Enrichment*
+The Goodreads CSV export contains only basic metadata (title, author, dates, and a few reading stats). Most external book APIs provide limited coverage or inconsistent data for enrichment. As a result, generating meaningful insights requires building creative heuristics. This process takes time, but it allows for more unique and personalized summaries beyond what raw Goodreads data or public APIs can offer.
