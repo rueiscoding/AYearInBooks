@@ -4,7 +4,7 @@ import io
 import csv
 from io import StringIO
 from app.calculations.totals import total_read, total_toread, total_pages, total_authors
-from app.calculations.misc import impulse_reads, longest_binge_session, sleeper_gem
+from app.calculations.misc import impulse_reads, longest_binge_session, sleeper_gem, indie_titles
 
 
 app = FastAPI()
@@ -28,6 +28,7 @@ async def parse_csv(file: UploadFile = File(...)):
         "impulse_reads": impulse_reads(read_df).to_json(orient="records", date_format="iso"),
         "longest_binge_session": longest_binge_session(read_df).to_json(orient="records", date_format="iso"),
         "sleeper_gem": sleeper_gem(read_df).to_json(orient="records", date_format="iso"),
+        "indie_titles": indie_titles(read_df),
     }
     return result
 

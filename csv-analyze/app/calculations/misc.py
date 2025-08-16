@@ -1,14 +1,40 @@
 import pandas as pd
 import csv
+import os
 from datetime import datetime
 
 
 
 # books outside of big 5 publishers
-def publishers(df:pd.DataFrame):
-    raise NotImplementedError()
+# publisher_dict has gotta be exhaustive for this to work
+# counts subsidiaries and imprints as non indie
+def indie_titles(df:pd.DataFrame):
+    # df = df[df['Exclusive Shelf'] == 'read']
 
-    # Harper Collins vs HarperCollins... subsidiaries??
+    here = os.path.dirname(__file__)
+    csv_path = os.path.join(here, "publisher_dict.csv")
+    big_5 = pd.read_csv(csv_path)
+
+    big5_aliases = set(big_5['alias'].str.lower())
+    df = df.dropna(subset=['Publisher']).copy()
+    df['Publisher'] = df['Publisher'].str.lower().str.strip().replace(r'[^a-z\s]', '', regex=True)
+    df['Publisher'] = (df['Publisher'].fillna('').str.lower().str.strip().str.replace(r'\s+', ' ', regex=True))
+    
+    def is_big5(publisher):
+        return any(alias in publisher for alias in big5_aliases)
+
+    df['IsBig5'] = df['Publisher'].apply(is_big5)
+
+    indie_df = df[~df['IsBig5']]
+
+    columns = ['Title', 'Publisher']
+
+    number_unique = indie_df['Publisher'].nunique()
+
+    # return indie_df[columns].sample(15)
+    # return number_unique
+    return len(indie_df)
+
 
 # books marked as to-read and read within 7 days
 def impulse_reads(df:pd.DataFrame) -> pd.DataFrame:
@@ -92,4 +118,3 @@ def how_trendy(df: pd.DataFrame):
     raise NotImplementedError()
 
 # df = pd.read_csv("my_reads.csv")
-# print(longest_binge_session(df))

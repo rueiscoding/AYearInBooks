@@ -24,6 +24,8 @@ __pycache__/
 
 **/*.csv
 !csv-analyze/app/calculations/country_dict.csv
+!csv-analyze/app/calculations/publisher_dict.csv
+
 
 # Editor directories and files
 .vscode/*
