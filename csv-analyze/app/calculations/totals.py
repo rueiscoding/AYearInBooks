@@ -13,7 +13,7 @@ def total_toread(df: pd.DataFrame) -> int:
     counts = df['Exclusive Shelf'].value_counts()
     return int(counts['to-read'])
 
-# pages read: if 'Exclusive Shelf' is 'read', sum values in 'Number of Pages'
+# pages read: sum values in 'Number of Pages'
 def total_pages(df: pd.DataFrame) -> int:
 
     total = 0
@@ -24,7 +24,7 @@ def total_pages(df: pd.DataFrame) -> int:
 
     return int(total)
 
-# unique authors read: check 'Author' and if 'Exclusive Shelf' is 'read'
+# unique authors read: check 'Author'
 def total_authors(df: pd.DataFrame) -> int:
 
     return int(df['Author'].nunique())

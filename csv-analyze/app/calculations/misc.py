@@ -41,8 +41,8 @@ def impulse_reads(df:pd.DataFrame) -> pd.DataFrame:
     # df = df[df['Exclusive Shelf'] == 'read']
     cleaned = df.dropna(subset=['Date Read', 'Date Added']).copy()
 
-    cleaned['Date Read'] = pd.to_datetime(cleaned['Date Read'], errors='coerce')
-    cleaned['Date Added'] = pd.to_datetime(cleaned['Date Added'], errors='coerce')
+    # cleaned['Date Read'] = pd.to_datetime(cleaned['Date Read'], errors='coerce')
+    # cleaned['Date Added'] = pd.to_datetime(cleaned['Date Added'], errors='coerce')
 
     cleaned['Days Between'] = (cleaned['Date Read'] - cleaned['Date Added']).dt.days
     cleaned = cleaned[ (cleaned['Days Between'] <= 7) & (cleaned['Days Between'] > 1)] # more than 1 because not counting on that day or next day
@@ -58,8 +58,8 @@ def sleeper_gem(df:pd.DataFrame) -> pd.DataFrame:
     # df = df[df['Exclusive Shelf'] == 'read']
     cleaned = df.dropna(subset=['Date Read', 'Date Added']).copy()
 
-    cleaned['Date Read'] = pd.to_datetime(cleaned['Date Read'], errors='coerce')
-    cleaned['Date Added'] = pd.to_datetime(cleaned['Date Added'], errors='coerce')
+    # cleaned['Date Read'] = pd.to_datetime(cleaned['Date Read'], errors='coerce')
+    # cleaned['Date Added'] = pd.to_datetime(cleaned['Date Added'], errors='coerce')
 
     cleaned['Days Between'] = (cleaned['Date Read'] - cleaned['Date Added']).dt.days
     columns = ['Title', 'Author', 'My Rating', 'Date Read', 'Date Added', 'Days Between']
@@ -76,22 +76,12 @@ def really_like(value: int, df: pd.DataFrame) -> int:
     return df['My Rating'].quantile(value)
 
 
-# highest rated titles with fewest # of readers
-def hidden_gem(df:pd.DataFrame):
-    raise NotImplementedError()
-
-# books read way past publication year that user reallllly liked
-# is reallly liked above mean? 1std above mean?
-# how late is late
-def late_to_party(df:pd.DataFrame):
-    raise NotImplementedError()
-
 # longest streak of days where books logged as 'read'
 def longest_binge_session(df: pd.DataFrame) -> pd.DataFrame:
 
     # df = df[df['Exclusive Shelf'] == 'read']
     df = df.dropna(subset=['Date Read']).copy()
-    df['Date Read'] = pd.to_datetime(df['Date Read'], errors='coerce')
+    # df['Date Read'] = pd.to_datetime(df['Date Read'], errors='coerce')
     df['Read Day'] = df['Date Read'].dt.normalize() # get rid of time
 
     unique_days = pd.Series(sorted(df['Read Day'].unique())) # sort n group unique days
@@ -111,10 +101,43 @@ def longest_binge_session(df: pd.DataFrame) -> pd.DataFrame:
 
     return streak_books
 
+# longest went without reading a book
+def biggest_book_slump(df: pd.DataFrame) -> pd.DataFrame:
+    # df = df[df['Exclusive Shelf'] == 'read'] #jsut for  testing
+    df = df.dropna(subset='Date Read')
+    # df['Date Read'] = pd.to_datetime(df['Date Read'], errors='coerce')
+    # df = df[df['Date Read'] > pd.Timestamp('2016-7-01')] #for testing
 
-# trend setter vs adopter
-# compare date read w peak popularity
-def how_trendy(df: pd.DataFrame):
-    raise NotImplementedError()
+    sorted = df.sort_values('Date Read').reset_index(drop=True)
+    sorted['Gap'] = sorted['Date Read'].diff()
+
+    max_gap_idx = sorted['Gap'].idxmax() # row w largest gap
+    columns = ['Title', 'Author', 'Date Read', 'Gap']
+
+    return sorted.loc[[max_gap_idx - 1, max_gap_idx]][columns]
+    # return sorted.head(10)[columns]
+
+# when original publication year matches the date read
+# allow year to be parameter
+def fomo_count(df: pd.DataFrame) -> int:
+
+    # df = df[df['Exclusive Shelf'] == 'read'] #jsut for  testing
+    df = df.dropna(subset='Original Publication Year')
+    df = df.dropna(subset='Date Read')
+
+    # df['Date Read'] = pd.to_datetime(df['Date Read'], errors='coerce')
+    df['Year Read'] = df['Date Read'].dt.year
+
+    df = df[df['Original Publication Year'] == df['Year Read']]
+
+    return len(df)
+
+def number_of_reviews(df:pd.DataFrame) -> int:
+
+    df = df.dropna(subset='My Review')
+
+    return len(df)
+
 
 # df = pd.read_csv("my_reads.csv")
+# print(fomo_count(df))
