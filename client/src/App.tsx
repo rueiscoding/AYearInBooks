@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import './index.css';
+import WrappedPage from './components/Wrapped';
 
 
 function App() {
@@ -75,9 +76,7 @@ function App() {
         </div>}
 
         {output !== null &&
-          <div>
-            <p>{JSON.stringify(output, null, 2)}</p>
-          </div>
+          <WrappedPage data={output}></WrappedPage>
         }
 
       </div> 
